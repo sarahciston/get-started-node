@@ -1,0 +1,26 @@
+[
+    {
+    "_id": "ck0iioiko000e01040k7tbiyx",
+    "name": "ck0iioe9f000b0104r7tgek6ztts.wav",
+    "text": "you are very nice",
+    "size": 70884,
+    "createdAt": "2019-09-13T19:30:50.000Z",
+    "content_type": "audio/x-wav",
+    "file1id": "ck0iioe9f000b0104r7tgek6z",
+    "file1url": "https://cdn.glitch.com/155d0693-823a-4ff9-a75d-d5b22fccb7c1%2Fck0iioe9f000b0104r7tgek6z.wav",
+    "file2id": "ck0iioiko000e01040k7tbiyx",
+    "file2url": "https://cdn.glitch.com/155d0693-823a-4ff9-a75d-d5b22fccb7c1%2Fck0iioiko000e01040k7tbiyx.wav"
+    },
+    {
+        "_id": "cjsjw6qp405xw0160ami452c7",
+        "name": "tts.wav",
+        "text": "he going sister you going like",
+        "size": 89804,
+        "createdAt": "2019-02-25T05:19:02.000Z",
+        "content_type": "audio/x-wav",
+        "file1id": "cjsjw6j2305xs0160tkb4kyma",
+        "file1url": "https://cdn.glitch.com/155d0693-823a-4ff9-a75d-d5b22fccb7c1%2Fcjsjw6j2305xs0160tkb4kyma.wav",
+        "file2id": "cjsjw6qp405xw0160ami452c7",
+        "file2url": "https://cdn.glitch.com/155d0693-823a-4ff9-a75d-d5b22fccb7c1%2Fcjsjw6qp405xw0160ami452c7.wav"
+      },
+]

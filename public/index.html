@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>inner.voice.over</title>
+    <link rel="stylesheet" type="text/css" href="styles/app.css">
+    <link rel="stylesheet" type="text/css" href="styles/install-button.css">
+  </head>
+  
+  <body>
+
+    <div class="wrapper">
+
+      <header>
+        <h1>inner(voice)over</h1>
+      </header>
+
+      <!--put a listen file here automatically-->
+      <section class="listenClips">
+        <article class="clip">
+          <!--<audio controls id="playRandom" preload="auto" type="audio/wav"></audio>-->
+          <audio controls id="playContribute" type="audio/wav" autoplay="true" src="https://cdn.glitch.com/155d0693-823a-4ff9-a75d-d5b22fccb7c1%2Fcjuyp359s0uun0160olhrz3px.wav?v=1595012224407"></audio>
+          <!--<audio controls id="playContribute" type="audio/wav" src="delight.wav"></audio>-->
+          <p>you have something to contribute</p>
+        </article>
+      </section>
+      <!--adds listen files, starts recording-->
+      <section class="mainControls">
+        <div id="buttons">
+          <button class="listenButton">listen</button>
+          <button class="recordButton">contribute</button>
+          <button class="stopButton" disabled="true" hidden="true">recording</button>
+        </div>
+        <a href="https://47b4e133-47f2-4e95-b012-c07107ec01da-bluemix.cloudant.com/ivo/ck32km1eq1kx001013kxu3v88/ck32km1eq1kx001013kxu3v88.wav">test</a>
+      </section>
+
+      <section class="recordClips">
+      </section>
+    </div>
+
+<!--    <label for="toggle">@</label>
+    <input type="checkbox" id="toggle">
+    <aside>-->
+      <!--<div class="about"><h4>about</h4>-->
+      <!--<p>more info tk</p></div>-->
+      <!--<canvas hidden class="visualizer" height="60px"></canvas>-->
+<!--      <p>Web dictaphone is built using <a href="https://developer.mozilla.org/en-US/docs/Web/API/Navigator.getUserMedia">getUserMedia</a> and the <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder_API">MediaRecorder API</a>, which provides an easier way to capture Media streams.</p>
+      <p>Icon courtesy of <a href="http://findicons.com/search/microphone">Find Icons</a>. Thanks to <a href="http://soledadpenades.com/">Sole</a> for the Oscilloscope code!</p>
+      <button id="install-btn">Install app</button>
+    </aside>-->
+    
+    <!--<script src="scripts/install.js"></script>-->
+    <script src="../js/mediaDevices-getUserMedia-polyfill.js"></script>
+    <script src="../js/WebAudioRecorder.min.js"></script>
+    <script src="../js/WebAudioRecorderWav.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/resonance-audio/build/resonance-audio.min.js"></script>
+    <!--<script src="../js/socket.io.slim.js../js/resonance-audio.min.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/pouchdb/5.4.5/pouchdb.min.js"></script>
+<!--     <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script> -->
+    <script src="../js/socket.io.js"></script>
+      <script src="../js/app.js"></script>
+   
+  </body>
+  
+</html>

@@ -2,9 +2,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: get-started-node
+  name: innervoiceover
   labels:
-    app: get-started-node
+    app: innervoiceover
 spec:
   replicas: 1
   selector:

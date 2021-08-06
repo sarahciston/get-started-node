@@ -1,0 +1,3 @@
+2020/07/06-14:31:09.487594 7f990a587700 Recovering log #3696
+2020/07/06-14:31:09.487744 7f990a587700 Level-0 table #3698: started
+2020/07/06-14:31:09.488043 7f990a587700 Level-0 table #3698: 0 bytes IO error: _replicator/003698.ldb: No space left on device
