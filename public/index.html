@@ -20,9 +20,10 @@
       <section class="listenClips">
         <article class="clip">
           <!--<audio controls id="playRandom" preload="auto" type="audio/wav"></audio>-->
-          <audio controls id="playContribute" type="audio/wav" autoplay="true" src="https://cdn.glitch.com/155d0693-823a-4ff9-a75d-d5b22fccb7c1%2Fcjuyp359s0uun0160olhrz3px.wav?v=1595012224407"></audio>
+          <!-- <audio controls id="playContribute" type="aud
+            io/wav" autoplay="true" src="https://cdn.glitch.com/155d0693-823a-4ff9-a75d-d5b22fccb7c1%2Fcjuyp359s0uun0160olhrz3px.wav?v=1595012224407"></audio> -->
           <!--<audio controls id="playContribute" type="audio/wav" src="delight.wav"></audio>-->
-          <p>you have something to contribute</p>
+          <p id="firstClip" value="you have something to contribute">you have something to contribute</p>
         </article>
       </section>
       <!--adds listen files, starts recording-->
@@ -51,6 +52,7 @@
     
     <!--<script src="scripts/install.js"></script>-->
     <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.js"></script>
+    <script src="../js/p5.speech.js"></script>
     <script src="../js/mediaDevices-getUserMedia-polyfill.js"></script>
     <script src="../js/WebAudioRecorder.min.js"></script>
     <script src="../js/WebAudioRecorderWav.min.js"></script>

@@ -4,7 +4,7 @@
 // var ResonanceAudio = require('resonance-audio.min');
 // var io = require('socket.io.js')
 
-let voice = new p5.Speech('Samantha', listen) //'Google UK English Male'
+let voice = new p5.Speech('Samantha', getListen) //'Google UK English Male'
 
 // set up basic variables for app
 //var buttons = document.querySelector('#buttons')
@@ -15,9 +15,62 @@ var recordClips = document.querySelector('.recordClips');
 var listenClips = document.querySelector('.listenClips');
 var mainControls = document.querySelector('.mainControls');
 //var canvas = document.querySelector('.visualizer');
-// var playContribute = document.querySelector('#playContribute');
+var playContribute = document.querySelector('#playContribute');
 var dbAudio = {}
+//const DB_URL = 'https://api.graph.cool/simple/v1/cjrfet7u94als0129de33wha3' //update
+//const DB_UPLOAD = 'https://api.graph.cool/file/v1/cjrfet7u94als0129de33wha3' //update
 const sleep = time => new Promise(resolve => setTimeout(resolve, time));
+
+
+//const socket = io('http://127.0.0.1:8081');
+//const socket = io('http://localhost:3000/');
+//const socket = io('https://innervoiceover.sarahciston1.now.sh/');
+// var socket = io('http://deepspeechsocket.glitch.me');
+
+// const socket = io('https://messy-catnip-textbook.glitch.me/'); 
+// //io() //io('52.71.146.0'); //io('https://innervoiceover.glitch.me/');
+// // {  transports: ['websocket'],   extraHeaders: { withCredentials: false },}
+
+// socket.on('error', (err)=>{
+//   console.log(err);
+// });
+
+// socket.on('connection', function(){
+// 	console.log('connected to server');  
+// });
+
+// socket.emit('message', 'hello');
+
+// socket.on('recognize', function(results){
+//   console.log('results: ', results)
+// });
+
+// socket.on('message', handleMessage)
+
+// function handleMessage(message){
+//   console.log(message)
+//   // socket.emit('message', 'received')
+  
+//   if (message === 'hi') {
+//     socket.emit('message', 'howdy-do')    
+//   }
+  
+//   if (message === 'no') {
+//     socket.emit('message', 'nevermind')    
+//   }
+  
+//   if (message === 'yes') {
+//     socket.emit('message', 'great')    
+//   }
+//};
+
+
+// socket.on('message', (data) => {
+//     console.log(data)
+// });
+
+// socket.emit('message', 'received');
+
 
 // visualiser setup - create web audio api context and canvas //var audioCtx = new (window.AudioContext || webkitAudioContext)();
 //var source = audioCtx.createBufferSource();
@@ -31,14 +84,18 @@ var encodingType; 					//holds selected encoding for resulting audio (file)
 var encodeAfterRecord = true;       // when to encode
 var audioE //audio object for listening
 
-// listenButton.addEventListener("click", listen);
+
+//cues first listen
+// getListen()
+//listenButton.addEventListener("click", getListen);
 
 //add events to those 2 buttons
 recordButton.addEventListener("click", startRecording);
 stopButton.addEventListener("click", stopRecording);
 
-// playContribute.preload = "auto";
-// playContribute.autoplay = true;
+playContribute.preload = "auto";
+playContribute.autoplay = true;
+
 
 function startRecording() {
 	audioCtx = new AudioContext();
@@ -265,9 +322,48 @@ function createDownloadLink(blob,encoding) {
 // update("cjuumtdnj0sgs0160jw621fta", "file2url", "'https://innervoiceover.glitch.me/audio/cjuumtbwo0sgo0160qoud8mfhtts.wav'")
 
 //pulls the whole database and selects random items to play
-function listen() {
+function getListen() {
+	// let firstClip = document.getElementById("firstClip")
+	// firstClip = firstClip.innerText
+	// console.log(firstClip)
+	// firstClip = voice.speak(firstClip)
+	
+  //    OLD VERSION FROM GRAPHCOOL
+  // var DBURL = 'https://api.graph.cool/simple/v1/cjrfet7u94als0129de33wha3'
+  // var FILE_ID = 'cjuyqjak30uw30160zhf0rubu'
+  // var query = `query {
+  //     allFiles {
+  //         id
+  //         url
+  //         text
+  //         file1 {
+  //           id
+  //           url
+  //           text
+  //         }
+  //         file2 {
+  //           id
+  //           url
+  //           text
+  //         }
+  //     }
+  // }`
+  // var op = {
+  //   method: 'POST',
+  //   headers: {'Content-Type': 'application/json'},
+  //   body: JSON.stringify({
+  //     query: query
+  //   })
+  // }
+  
+    // Get all
+  //var allDocs = []
+  
+  // var allDocs = "/get/"
+  // console.log(typeof(allDocs))
   
   fetch('/api/getall').then(function(res){
+    // console.log(res) //whole response with headers
     return res.json() //converts to body of response only
   })
   .then(function(dbAudio){
@@ -281,6 +377,8 @@ function listen() {
         //on each click of the listen button selects random item and creates audio object
       listenButton.onclick = function(e) {
 			audioCtx = new AudioContext();
+        
+
 				// ASMR room
 				// let resonanceAudioScene = new ResonanceAudio(audioCtx);
 				// 	resonanceAudioScene.output.connect(audioCtx.destination);
@@ -298,23 +396,40 @@ function listen() {
 
         //pick random item
           var random = randomItem(dbAudio)
+        //   console.log(random)
+          //playRandom.src = random.url
           var FILE_ID = random.id
           var randomDoc = random.doc
-          var clipText = randomDoc.text		  
+          var clipText = randomDoc.text
+		  
 		  if (clipText == '') {
             random = randomItem(dbAudio)
             clipText = random.text
           }
-		  console.log(clipText)
-          let clip = voice.speak(clipText)
-        // let attachment = Object.values(randomDoc._attachments)
-		// let listenFile = attachment[0].data
-		// listenFile = atob(decodeURIComponent(listenFile))
-		// listenFile = new Blob([listenFile], {type: "audio/x-wav"})
-		// let FILE_URL = window.URL.createObjectURL(listenFile)
+		  console.log(clipText, FILE_ID)
+
+        //   var FILE_URL = randomDoc.file2url			
+		let attachment = Object.values(randomDoc._attachments)
+		let listenFile = attachment[0].data
+		listenFile = atob(decodeURIComponent(listenFile))
+		listenFile = new Blob([listenFile], {type: "audio/x-wav"})
+		console.log(listenFile)
+		let FILE_URL = window.URL.createObjectURL(listenFile)
 		// console.log(FILE_URL)
 
-        //create clip object to play
+
+		
+		let clip = voice.speak(clipText)
+
+
+		// let base64 = fetch(`data:audio/x-wav;base64,${listenFile}`)
+			// .then(d => {
+		// let blob = new Blob([d], {type: "audio/x-wav"})
+				// console.log(b)
+			// .then(b => {
+				// let FILE_URL = URL.createObjectURL(b)
+        
+		//create clip object to play
 		var clipContainer = document.createElement('article');
 		var clipLabel = document.createElement('p');
 		clipLabel.textContent = clipText;
@@ -326,6 +441,43 @@ function listen() {
 		// audioE.src = FILE_URL
 		audioE.src = clip
 		console.log(audioE.src)
+          
+        // dbAudio = filterData(dbAudio, null)
+    //console.log(dbAudio)
+        //playContribute.src = dbAudio[352].url
+					//'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NzIxNDg2MzIsImNsaWVudElkIjoiY2phZWxoNGc1MmhqMDAxNDBldDk3NTdrcyIsInByb2plY3RJZCI6ImNqcmZldDd1OTRhbHMwMTI5ZGUzM3doYTMiLCJwZXJtYW5lbnRBdXRoVG9rZW5JZCI6ImNrMjhncGNwOTlpaHcwMTYzZG55ajNvbnYifQ.imtDghaLc-IMXB7vq7dpvwK3NJN0lKp6yGbPHMFb2UU'
+					//random.url = 'https://cors-anywhere.herokuapp.com/' + random.url.slice(8,1000)
+        //FILE_URL = FILE_URL + "?v=1593737373477"
+        //updated URL for glitch version
+				// fetch(FILE_URL, {method: 'GET', headers: {'Origin': 'http://localhost:3000',  'X-Requested-With': 'XMLHttpRequest', 'Content-Type':'audio/wav'}}) //'application/x-www-form-urlencoded'
+				// //.then(res => sessionStorage.setItem('lisWav', res.body))
+				// 		.then(res => {
+				// 			//console.log(res)
+				// 			const reader = res.body.getReader()
+				// 			return new ReadableStream({
+				// 		    start(controller) {
+				// 		      return pump();
+				// 		      function pump() {
+				// 		        return reader.read().then(({ done, value }) => {
+				// 		          if (done) {
+				// 		            controller.close();
+				// 		            return;
+				// 		          }
+				// 		          // Enqueue the next data chunk into our target stream
+				// 		          controller.enqueue(value);
+				// 		          return pump();
+				// 		        });
+				// 		      }
+				// 		    }
+				// 		  })
+				// 		})
+				// 		.then(stream => new Response(stream))
+				// 		.then(response => response.blob())
+				// 		.then(blob => URL.createObjectURL(blob))
+				// 		.then(urlB => {
+
+
+							
             
             //reinsert for ASMR
 // 							var audioSource = audioCtx.createMediaElementSource(audioE);
@@ -337,14 +489,30 @@ function listen() {
 // 							resonanceAudioScene.setListenerPosition(0, 0, 0);
 // 							//resonanceSource.setMaxDistance(3.3);
         
-			// clipContainer.appendChild(audioE);
+					// clipContainer.appendChild(audioE);
 			clipContainer.appendChild(clipLabel);
 			listenClips.appendChild(clipContainer);
-			window.onresize();
-			//listenClips.style.marginTop = aboveHeight;
+					window.onresize();
+					//listenClips.style.marginTop = aboveHeight;
+
+				// }).catch(err => console.error(err))
 			}			
     }).catch(err => console.error(err))
 }
+
+// function filterData(data, filter) {
+//   varsort = []
+//   console.log("filter for: " + filter);
+//   for (e in data) {
+//     if (data[e].file1 != filter) {
+//       sort.push(data[e])
+//     }
+//   }
+//   console.log("found "+sort.length+" records")
+//   //console.log(data[e].lines2.id)
+//   console.log(sort)
+//   return sort
+// }
 
 //to call random item from databasse
 function randomItem(array) {

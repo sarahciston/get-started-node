@@ -41,12 +41,14 @@ canvas {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  vertical-align: middle;
 }
 
 #buttons button {
   font-size: 1rem;
   padding: 1rem;
   width: calc(100% - 0.25rem);
+  top: 0.5vmax;
 }
 
 button {
