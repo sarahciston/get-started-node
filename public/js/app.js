@@ -25,33 +25,33 @@ const sleep = time => new Promise(resolve => setTimeout(resolve, time));
 //const socket = io('https://innervoiceover.sarahciston1.now.sh/');
 // var socket = io('http://deepspeechsocket.glitch.me');
 
-const socket = io('https://messy-catnip-textbook.glitch.me/'); 
-//io() //io('52.71.146.0'); //io('https://innervoiceover.glitch.me/');
-// {  transports: ['websocket'],   extraHeaders: { withCredentials: false },}
+// const socket = io('https://messy-catnip-textbook.glitch.me/'); 
+// //io() //io('52.71.146.0'); //io('https://innervoiceover.glitch.me/');
+// // {  transports: ['websocket'],   extraHeaders: { withCredentials: false },}
 
-socket.on('error', (err)=>{
-  console.log(err);
-});
+// socket.on('error', (err)=>{
+//   console.log(err);
+// });
 
-socket.on('connection', function(){
-	console.log('connected to server');  
-});
+// socket.on('connection', function(){
+// 	console.log('connected to server');  
+// });
 
-socket.emit('message', 'hello');
+// socket.emit('message', 'hello');
 
-socket.on('recognize', function(results){
-  console.log('results: ', results)
-});
+// socket.on('recognize', function(results){
+//   console.log('results: ', results)
+// });
 
-socket.on('message', handleMessage)
+// socket.on('message', handleMessage)
 
-function handleMessage(message){
-  console.log(message)
-  // socket.emit('message', 'received')
+// function handleMessage(message){
+//   console.log(message)
+//   // socket.emit('message', 'received')
   
-  if (message === 'hi') {
-    socket.emit('message', 'howdy-do')    
-  }
+//   if (message === 'hi') {
+//     socket.emit('message', 'howdy-do')    
+//   }
   
 //   if (message === 'no') {
 //     socket.emit('message', 'nevermind')    
@@ -60,7 +60,7 @@ function handleMessage(message){
 //   if (message === 'yes') {
 //     socket.emit('message', 'great')    
 //   }
-};
+//};
 
 
 // socket.on('message', (data) => {
@@ -356,7 +356,7 @@ function getListen() {
   // console.log(typeof(allDocs))
   
   fetch('/api/getall').then(function(res){
-    console.log(res) //whole response with headers
+    // console.log(res) //whole response with headers
     return res.json() //converts to body of response only
   })
   .then(function(dbAudio){
@@ -389,30 +389,46 @@ function getListen() {
 
         //pick random item
           var random = randomItem(dbAudio)
-          console.log(random)
+        //   console.log(random)
           //playRandom.src = random.url
           var FILE_ID = random.id
           var randomDoc = random.doc
           var clipText = randomDoc.text
-          var FILE_URL = randomDoc.file2url
-          console.log(clipText, FILE_ID);
-          console.log(FILE_URL)
-					//redoes the random call if blank
-          if (clipText == '') {
+		  
+		  if (clipText == '') {
             random = randomItem(dbAudio)
             clipText = random.text
           }
+		  console.log(clipText, FILE_ID)
+
+        //   var FILE_URL = randomDoc.file2url			
+		let attachment = Object.values(randomDoc._attachments)
+		let listenFile = attachment[0].data
+		listenFile = atob(decodeURIComponent(listenFile))
+		listenFile = new Blob([listenFile], {type: "audio/x-wav"})
+		console.log(listenFile)
+		let FILE_URL = window.URL.createObjectURL(listenFile)
+		// console.log(FILE_URL)
+
+
+		// let base64 = fetch(`data:audio/x-wav;base64,${listenFile}`)
+			// .then(d => {
+		// let blob = new Blob([d], {type: "audio/x-wav"})
+				// console.log(b)
+			// .then(b => {
+				// let FILE_URL = URL.createObjectURL(b)
         
-        //create clip object to play
-					var clipContainer = document.createElement('article');
-					var clipLabel = document.createElement('p');
-					clipLabel.textContent = clipText;
-					var audioE = document.createElement('audio');
-					clipContainer.classList.add('clip');
-					audioE.setAttribute('controls', '');
-					audioE.setAttribute('autoplay', '');
-          audioE.setAttribute('type', 'audio/wav') //type="audio/wav" 
-        
+		//create clip object to play
+		var clipContainer = document.createElement('article');
+		var clipLabel = document.createElement('p');
+		clipLabel.textContent = clipText;
+		var audioE = document.createElement('audio');
+		clipContainer.classList.add('clip');
+		audioE.setAttribute('controls', '');
+		audioE.setAttribute('autoplay', '');
+		audioE.setAttribute('type', 'audio/wav') //type="audio/wav" 
+		audioE.src = FILE_URL
+		console.log(audioE.src)
           
         // dbAudio = filterData(dbAudio, null)
     //console.log(dbAudio)
@@ -447,8 +463,9 @@ function getListen() {
 				// 		.then(response => response.blob())
 				// 		.then(blob => URL.createObjectURL(blob))
 				// 		.then(urlB => {
-							audioE.src = FILE_URL //audioE.src = urlB
-							console.log(audioE)
+
+
+							
             
             //reinsert for ASMR
 // 							var audioSource = audioCtx.createMediaElementSource(audioE);
@@ -460,12 +477,14 @@ function getListen() {
 // 							resonanceAudioScene.setListenerPosition(0, 0, 0);
 // 							//resonanceSource.setMaxDistance(3.3);
         
-							clipContainer.appendChild(audioE);
-		          clipContainer.appendChild(clipLabel);
-		          listenClips.appendChild(clipContainer);
-							window.onresize();
-							//listenClips.style.marginTop = aboveHeight;
-						}
+					clipContainer.appendChild(audioE);
+			clipContainer.appendChild(clipLabel);
+			listenClips.appendChild(clipContainer);
+					window.onresize();
+					//listenClips.style.marginTop = aboveHeight;
+
+				// }).catch(err => console.error(err))
+			}			
     }).catch(err => console.error(err))
 }
 
