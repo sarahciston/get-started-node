@@ -14,6 +14,7 @@ var listenButton = document.querySelector('.listenButton');
 var recordClips = document.querySelector('.recordClips');
 var listenClips = document.querySelector('.listenClips');
 var mainControls = document.querySelector('.mainControls');
+var loading = document.querySelector('#loading');
 //var canvas = document.querySelector('.visualizer');
 // var playContribute = document.querySelector('#playContribute');
 var dbAudio = {}
@@ -112,7 +113,7 @@ function startRecording() {
 			console.log("Encoding complete");
 			createDownloadLink(blob,recorder.encoding);
 			//encodingTypeSelect.disabled = false;
-      socket.binary(true).emit('stream-data', blob); //makes this into socket conveyed stream???? recorder? other? blob?
+    //   socket.binary(true).emit('stream-data', blob); //makes this into socket conveyed stream???? recorder? other? blob?
 
 		}
 
@@ -145,7 +146,7 @@ function startRecording() {
 
 function stopRecording() {
 	// console.log("stopRecording() called");
-  socket.emit('stream-end');
+//   socket.emit('stream-end');
 
 	//stop microphone access
 	gumStream.getAudioTracks()[0].stop();
@@ -163,8 +164,8 @@ function stopRecording() {
 	//tell the recorder to finish the recording (stop recording + encode the recorded audio)
 	recorder.finishRecording();
 	// console.log('Recording stopped');
-  socket.emit('stream-reset');
-  socket.emit('message', 'recording stopped');
+//   socket.emit('stream-reset');
+//   socket.emit('message', 'recording stopped');
 }
 
 function createDownloadLink(blob,encoding) {
@@ -192,7 +193,7 @@ function createDownloadLink(blob,encoding) {
 	var clipText = 'feature is forthcoming'
 	var clipContainer = document.createElement('article');
 	var clipLabel = document.createElement('p');
-	// var addButton = document.createElement('button');
+	var addButton = document.createElement('button');
 	clipContainer.classList.add('clip');
 	addButton.textContent = 'add to the database';
 	addButton.className = 'add';
@@ -221,7 +222,7 @@ function createDownloadLink(blob,encoding) {
       data.append('createdAt', c)
       console.log(data.getAll('blob'))
 			
-      fetch('/file', {
+      fetch('api/newfile', {
 				method: 'POST',
 				body: data
 			}).then(res => res.json())
@@ -234,8 +235,32 @@ function createDownloadLink(blob,encoding) {
 
     }
     
-		uploadFile(blob, fileName, createdAt)
+	uploadFile(blob, fileName, createdAt)
 	}
+}
+
+//for files with form method
+function getFile(d, f) {
+	var data = new FormData()
+	data.append('docid', d)
+	data.append('fileid', f)
+	// console.log(data.getAll('blob'))
+
+	// fetch("/api/getfile").then(function(res){
+	// 	return res.json() //converts to body of response only
+	//   }).then(function(res){
+	//   })
+	
+	fetch('api/getfile', {
+			method: 'POST',
+			body: data
+		}).then(res => res.json())
+	.then(data => {
+		console.log(data)
+	})
+	.catch(err => {
+		console.error(err)
+	})
 }
 
 //attempts to call an update for a post, not sure it's gonna work yet because the url?
@@ -276,10 +301,10 @@ function listen() {
     return dbAudio
   })
   .then(function(dbAudio){
-
+		loading.innerHTML = "ready. click to listen"
 //Handle click, set up room, select random doc
         //on each click of the listen button selects random item and creates audio object
-      listenButton.onclick = function(e) {
+      listenButton.onclick = function(e){
 			audioCtx = new AudioContext();
 				// ASMR room
 				// let resonanceAudioScene = new ResonanceAudio(audioCtx);
@@ -298,7 +323,7 @@ function listen() {
 
         //pick random item
           var random = randomItem(dbAudio)
-          var FILE_ID = random.id
+          var randomId = random.id
           var randomDoc = random.doc
           var clipText = randomDoc.text		  
 		  if (clipText == '') {
@@ -306,7 +331,10 @@ function listen() {
             clipText = random.text
           }
 		  console.log(clipText)
+		  //speak using p5>
           let clip = voice.speak(clipText)
+
+
         // let attachment = Object.values(randomDoc._attachments)
 		// let listenFile = attachment[0].data
 		// listenFile = atob(decodeURIComponent(listenFile))
@@ -314,37 +342,47 @@ function listen() {
 		// let FILE_URL = window.URL.createObjectURL(listenFile)
 		// console.log(FILE_URL)
 
-        //create clip object to play
-		var clipContainer = document.createElement('article');
-		var clipLabel = document.createElement('p');
-		clipLabel.textContent = clipText;
-		var audioE = document.createElement('audio');
-		clipContainer.classList.add('clip');
-		audioE.setAttribute('controls', '');
-		audioE.setAttribute('autoplay', '');
-		audioE.setAttribute('type', 'audio/wav') //type="audio/wav" 
-		// audioE.src = FILE_URL
-		audioE.src = clip
-		console.log(audioE.src)
-            
-            //reinsert for ASMR
-// 							var audioSource = audioCtx.createMediaElementSource(audioE);
-// 							var resonanceSource = resonanceAudioScene.createSource();
-// 							audioSource.connect(resonanceSource.input)//.connect.(audioCtx.destination);
-// 							//adjust ambisonicOutput of source objects to move as they play each time, a random output
-// 							let soundX = eitherOr(), soundY = 0, soundZ = 0;
-// 							resonanceSource.setPosition(soundX, soundY, soundZ);
-// 							resonanceAudioScene.setListenerPosition(0, 0, 0);
-// 							//resonanceSource.setMaxDistance(3.3);
-        
-			// clipContainer.appendChild(audioE);
-			clipContainer.appendChild(clipLabel);
-			listenClips.appendChild(clipContainer);
-			window.onresize();
-			//listenClips.style.marginTop = aboveHeight;
-			}			
-    }).catch(err => console.error(err))
-}
+		//download existing audio
+		let fileid = randomDoc._attachments
+		// fileid = Object.keys(fileid)[0].data
+		console.log(fileid)
+		
+		// WORKING ON HERE TO GET IT TO PULL AUDIO FILE
+		// let clip = getFile(randomDoc, fileid)
+		// console.log(clip)
+
+				//create clip object to play
+				var clipContainer = document.createElement('article');
+				var clipLabel = document.createElement('p');
+				clipLabel.textContent = clipText;
+				var audioE = document.createElement('audio');
+				clipContainer.classList.add('clip');
+				audioE.setAttribute('controls', '');
+				audioE.setAttribute('autoplay', '');
+				audioE.setAttribute('type', 'audio/wav') //type="audio/wav" 
+				// audioE.src = FILE_URL
+				audioE.src = clip
+				console.log(audioE.src)
+					
+					//reinsert for ASMR
+		// 							var audioSource = audioCtx.createMediaElementSource(audioE);
+		// 							var resonanceSource = resonanceAudioScene.createSource();
+		// 							audioSource.connect(resonanceSource.input)//.connect.(audioCtx.destination);
+		// 							//adjust ambisonicOutput of source objects to move as they play each time, a random output
+		// 							let soundX = eitherOr(), soundY = 0, soundZ = 0;
+		// 							resonanceSource.setPosition(soundX, soundY, soundZ);
+		// 							resonanceAudioScene.setListenerPosition(0, 0, 0);
+		// 							//resonanceSource.setMaxDistance(3.3);
+				
+					// clipContainer.appendChild(audioE);
+					loading.style.visibility = "hidden";
+					clipContainer.appendChild(clipLabel);
+					listenClips.appendChild(clipContainer);
+					window.onresize();
+					//listenClips.style.marginTop = aboveHeight;
+	  		}				
+		}).catch(err => console.error(err))
+	}
 
 //to call random item from databasse
 function randomItem(array) {

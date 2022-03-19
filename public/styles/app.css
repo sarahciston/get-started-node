@@ -27,6 +27,13 @@ h1, h2 {
   padding: 0.5rem 0 0 0;
 }
 
+h3 {
+  font-size: 1.1 rem;
+  text-align: center;
+  font-weight: normal;
+  padding: 0.5rem 0 0 0;
+}
+
 .main-controls {
   padding: 0.5rem 0;
   position: relative; /*new*/

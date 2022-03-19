@@ -80,7 +80,7 @@ app.get("/api/info", function(req, res){
 
 app.get("/api/getall", function(req, res){
   docs = []
-  mydb.list({ include_docs: true, attachments: true }) //db.allDocs({attachments:true})
+  mydb.list({ include_docs: true }) //attachments: true //db.allDocs({attachments:true})
     .then(function(doc) {
       docs.push(doc)
       //console.log(docs)
@@ -107,11 +107,28 @@ app.get("/api/getid", function(req, res){
       }).catch(function(err){console.log(err)});
 });
 
+app.post("/api/getfile", function(req, res){
+  var docId = req.params.docid
+  var attachmentName = req.params.fileid
+
+  // mydb.get(FILE_ID, { attachments: true })
+  //     .then(function (doc) {
+  //     res.send(doc); 
+  //     }).catch(function(err){console.log(err)});
+
+  mydb.getAttachment({
+    db: dbName,
+    docId: req.params.docid,
+    attachmentName: req.params.fileid
+  }).then(response => {
+    let attachment = response.result //as Readable;
+    attachment.pipe(process.stdout);
+  });
+})
+
 
 var insertOne = {};
 var getAll = {};
-
-
 
 
 //serve static file (index.html, images, css)

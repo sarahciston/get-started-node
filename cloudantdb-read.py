@@ -19,6 +19,7 @@ database = client.create_database(DB_NAME)
 if database.exists():
     print("'{0}' found\n".format(DB_NAME))
 
+'''
 dataPath = 'public/json/cleanData.json' #just one item as test
 filePath = '../../Desktop/audio/'
 fileList = os.listdir(filePath)
@@ -67,7 +68,7 @@ for f in fileList:
 #     idList.write(str(list))
 
 # print(len(list))
-
+'''
 
 '''
 # PUT ITEMS IN
@@ -77,21 +78,32 @@ for f in fileList:
         print("Document {'0'} successfully created".format(number))
 '''
 
-'''
+
 # GET ITEMS OUT
 results = Result(database.all_docs, include_docs=True)
-print("retrieved minimal from: \n{0}\n".format(results[0]))
-'''
+back = []
+for i in results: 
+    b = json.loads(results[i])
+    print(b)
+    # back.append(b)
+# print(back)
 
+# with open('backup.json', 'a') as backupFile:
+    # for each i in len(results)-1):
+    # [backupFile.write(str(results[i])) for i in results]
+# print("retrieved minimal from: \n{0}\n".format(results[0]))
+
+'''
 # GET DATA DIRECTLY FROM ENDPOINT
-# end_point = '{0}/{1}'.format(endpointURL, DB_NAME + "/_all_docs")
-# params = {'include_docs': 'true'}
-# response = client.r_session.get(end_point, params=params)
-# print("{0}\n".format(response.json()))
-
+end_point = '{0}/{1}'.format(endpointURL, DB_NAME + "/_all_docs")
+params = {'include_docs': 'true'}
+response = client.r_session.get(end_point, params=params)
+print("{0}\n".format(response.json()))
+'''
 
 
 '''
+# later
 for filename in audio:
     find entry in cleanData.json where name == filename:
     create new DB entry with entry from json
